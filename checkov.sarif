@@ -1,0 +1,236 @@
+
+       _               _
+   ___| |__   ___  ___| | _______   __
+  / __| '_ \ / _ \/ __| |/ / _ \ \ / /
+ | (__| | | |  __/ (__|   < (_) \ V /
+  \___|_| |_|\___|\___|_|\_\___/ \_/
+
+By Prisma Cloud | version: 3.2.495 
+terraform scan results:
+
+Passed checks: 8, Failed checks: 11, Skipped checks: 0
+
+Check: CKV_AZURE_160: "Ensure that HTTP (port 80) access is restricted from the internet"
+	PASSED for resource: module.insecure_nsg.azurerm_network_security_group.bad_nsg
+	File: \modules\nsg\main.tf:1-19
+	Calling File: \main.tf:24-33
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-azure-http-port-80-access-from-the-internet-is-restricted
+Check: CKV_AZURE_9: "Ensure that RDP access is restricted from the internet"
+	PASSED for resource: module.insecure_nsg.azurerm_network_security_group.bad_nsg
+	File: \modules\nsg\main.tf:1-19
+	Calling File: \main.tf:24-33
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-2
+Check: CKV_AZURE_10: "Ensure that SSH access is restricted from the internet"
+	PASSED for resource: module.insecure_nsg.azurerm_network_security_group.bad_nsg
+	File: \modules\nsg\main.tf:1-19
+	Calling File: \main.tf:24-33
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/bc-azr-networking-3
+Check: CKV_AZURE_77: "Ensure that UDP Services are restricted from the Internet "
+	PASSED for resource: module.insecure_nsg.azurerm_network_security_group.bad_nsg
+	File: \modules\nsg\main.tf:1-19
+	Calling File: \main.tf:24-33
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-udp-services-are-restricted-from-the-internet
+Check: CKV_AZURE_36: "Ensure 'Trusted Microsoft Services' is enabled for Storage Account access"
+	PASSED for resource: module.storage.azurerm_storage_account.this
+	File: \modules\storage_account\main.tf:1-10
+	Calling File: \main.tf:35-40
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/enable-trusted-microsoft-services-for-storage-account-access
+Check: CKV_AZURE_43: "Ensure Storage Accounts adhere to the naming rules"
+	PASSED for resource: module.storage.azurerm_storage_account.this
+	File: \modules\storage_account\main.tf:1-10
+	Calling File: \main.tf:35-40
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-storage-policies/ensure-storage-accounts-adhere-to-the-naming-rules
+Check: CKV_AZURE_3: "Ensure that 'enable_https_traffic_only' is enabled"
+	PASSED for resource: module.storage.azurerm_storage_account.this
+	File: \modules\storage_account\main.tf:1-10
+	Calling File: \main.tf:35-40
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-3
+Check: CKV_AZURE_244: "Avoid the use of local users for Azure Storage unless necessary"
+	PASSED for resource: module.storage.azurerm_storage_account.this
+	File: \modules\storage_account\main.tf:1-10
+	Calling File: \main.tf:35-40
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/bc-azure-244
+Check: CKV_AZURE_59: "Ensure that Storage accounts disallow public access"
+	FAILED for resource: module.storage.azurerm_storage_account.this
+	File: \modules\storage_account\main.tf:1-10
+	Calling File: \main.tf:35-40
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/ensure-that-storage-accounts-disallow-public-access
+
+		1  | resource "azurerm_storage_account" "this" {
+		2  |   name                     = var.name
+		3  |   resource_group_name      = var.resource_group_name
+		4  |   location                 = var.location
+		5  |   account_tier             = "Standard"
+		6  |   account_replication_type = "LRS"
+		7  | 
+		8  |   allow_nested_items_to_be_public = true   # ❌ Checkov will flag this
+		9  |   min_tls_version                 = "TLS1_0" # ❌ Weak TLS
+		10 | }
+
+Check: CKV_AZURE_33: "Ensure Storage logging is enabled for Queue service for read, write and delete requests"
+	FAILED for resource: module.storage.azurerm_storage_account.this
+	File: \modules\storage_account\main.tf:1-10
+	Calling File: \main.tf:35-40
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-logging-policies/enable-requests-on-storage-logging-for-queue-service
+
+		1  | resource "azurerm_storage_account" "this" {
+		2  |   name                     = var.name
+		3  |   resource_group_name      = var.resource_group_name
+		4  |   location                 = var.location
+		5  |   account_tier             = "Standard"
+		6  |   account_replication_type = "LRS"
+		7  | 
+		8  |   allow_nested_items_to_be_public = true   # ❌ Checkov will flag this
+		9  |   min_tls_version                 = "TLS1_0" # ❌ Weak TLS
+		10 | }
+
+Check: CKV_AZURE_44: "Ensure Storage Account is using the latest version of TLS encryption"
+	FAILED for resource: module.storage.azurerm_storage_account.this
+	File: \modules\storage_account\main.tf:1-10
+	Calling File: \main.tf:35-40
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-storage-policies/bc-azr-storage-2
+
+		1  | resource "azurerm_storage_account" "this" {
+		2  |   name                     = var.name
+		3  |   resource_group_name      = var.resource_group_name
+		4  |   location                 = var.location
+		5  |   account_tier             = "Standard"
+		6  |   account_replication_type = "LRS"
+		7  | 
+		8  |   allow_nested_items_to_be_public = true   # ❌ Checkov will flag this
+		9  |   min_tls_version                 = "TLS1_0" # ❌ Weak TLS
+		10 | }
+
+Check: CKV_AZURE_206: "Ensure that Storage Accounts use replication"
+	FAILED for resource: module.storage.azurerm_storage_account.this
+	File: \modules\storage_account\main.tf:1-10
+	Calling File: \main.tf:35-40
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/azr-general-206
+
+		1  | resource "azurerm_storage_account" "this" {
+		2  |   name                     = var.name
+		3  |   resource_group_name      = var.resource_group_name
+		4  |   location                 = var.location
+		5  |   account_tier             = "Standard"
+		6  |   account_replication_type = "LRS"
+		7  | 
+		8  |   allow_nested_items_to_be_public = true   # ❌ Checkov will flag this
+		9  |   min_tls_version                 = "TLS1_0" # ❌ Weak TLS
+		10 | }
+
+Check: CKV_AZURE_190: "Ensure that Storage blobs restrict public access"
+	FAILED for resource: module.storage.azurerm_storage_account.this
+	File: \modules\storage_account\main.tf:1-10
+	Calling File: \main.tf:35-40
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-networking-policies/azr-networking-190
+
+		1  | resource "azurerm_storage_account" "this" {
+		2  |   name                     = var.name
+		3  |   resource_group_name      = var.resource_group_name
+		4  |   location                 = var.location
+		5  |   account_tier             = "Standard"
+		6  |   account_replication_type = "LRS"
+		7  | 
+		8  |   allow_nested_items_to_be_public = true   # ❌ Checkov will flag this
+		9  |   min_tls_version                 = "TLS1_0" # ❌ Weak TLS
+		10 | }
+
+Check: CKV2_AZURE_40: "Ensure storage account is not configured with Shared Key authorization"
+	FAILED for resource: module.storage.azurerm_storage_account.this
+	File: \main.tf:1-10
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-iam-policies/bc-azure-2-40
+
+		1  | resource "azurerm_storage_account" "this" {
+		2  |   name                     = var.name
+		3  |   resource_group_name      = var.resource_group_name
+		4  |   location                 = var.location
+		5  |   account_tier             = "Standard"
+		6  |   account_replication_type = "LRS"
+		7  | 
+		8  |   allow_nested_items_to_be_public = true   # ❌ Checkov will flag this
+		9  |   min_tls_version                 = "TLS1_0" # ❌ Weak TLS
+		10 | }
+
+Check: CKV2_AZURE_47: "Ensure storage account is configured without blob anonymous access"
+	FAILED for resource: module.storage.azurerm_storage_account.this
+	File: \main.tf:1-10
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-iam-policies/bc-azure-2-47
+
+		1  | resource "azurerm_storage_account" "this" {
+		2  |   name                     = var.name
+		3  |   resource_group_name      = var.resource_group_name
+		4  |   location                 = var.location
+		5  |   account_tier             = "Standard"
+		6  |   account_replication_type = "LRS"
+		7  | 
+		8  |   allow_nested_items_to_be_public = true   # ❌ Checkov will flag this
+		9  |   min_tls_version                 = "TLS1_0" # ❌ Weak TLS
+		10 | }
+
+Check: CKV2_AZURE_33: "Ensure storage account is configured with private endpoint"
+	FAILED for resource: module.storage.azurerm_storage_account.this
+	File: \main.tf:1-10
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/bc-azure-2-33
+
+		1  | resource "azurerm_storage_account" "this" {
+		2  |   name                     = var.name
+		3  |   resource_group_name      = var.resource_group_name
+		4  |   location                 = var.location
+		5  |   account_tier             = "Standard"
+		6  |   account_replication_type = "LRS"
+		7  | 
+		8  |   allow_nested_items_to_be_public = true   # ❌ Checkov will flag this
+		9  |   min_tls_version                 = "TLS1_0" # ❌ Weak TLS
+		10 | }
+
+Check: CKV2_AZURE_41: "Ensure storage account is configured with SAS expiration policy"
+	FAILED for resource: module.storage.azurerm_storage_account.this
+	File: \main.tf:1-10
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-iam-policies/bc-azure-2-41
+
+		1  | resource "azurerm_storage_account" "this" {
+		2  |   name                     = var.name
+		3  |   resource_group_name      = var.resource_group_name
+		4  |   location                 = var.location
+		5  |   account_tier             = "Standard"
+		6  |   account_replication_type = "LRS"
+		7  | 
+		8  |   allow_nested_items_to_be_public = true   # ❌ Checkov will flag this
+		9  |   min_tls_version                 = "TLS1_0" # ❌ Weak TLS
+		10 | }
+
+Check: CKV2_AZURE_38: "Ensure soft-delete is enabled on Azure storage account"
+	FAILED for resource: module.storage.azurerm_storage_account.this
+	File: \main.tf:1-10
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/bc-azure-2-38
+
+		1  | resource "azurerm_storage_account" "this" {
+		2  |   name                     = var.name
+		3  |   resource_group_name      = var.resource_group_name
+		4  |   location                 = var.location
+		5  |   account_tier             = "Standard"
+		6  |   account_replication_type = "LRS"
+		7  | 
+		8  |   allow_nested_items_to_be_public = true   # ❌ Checkov will flag this
+		9  |   min_tls_version                 = "TLS1_0" # ❌ Weak TLS
+		10 | }
+
+Check: CKV2_AZURE_1: "Ensure storage for critical data are encrypted with Customer Managed Key"
+	FAILED for resource: module.storage.azurerm_storage_account.this
+	File: \main.tf:1-10
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/azure-policies/azure-general-policies/ensure-storage-for-critical-data-are-encrypted-with-customer-managed-key
+
+		1  | resource "azurerm_storage_account" "this" {
+		2  |   name                     = var.name
+		3  |   resource_group_name      = var.resource_group_name
+		4  |   location                 = var.location
+		5  |   account_tier             = "Standard"
+		6  |   account_replication_type = "LRS"
+		7  | 
+		8  |   allow_nested_items_to_be_public = true   # ❌ Checkov will flag this
+		9  |   min_tls_version                 = "TLS1_0" # ❌ Weak TLS
+		10 | }
+
+
+
+Wrote output in SARIF format to the file 'results.sarif'
