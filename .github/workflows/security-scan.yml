@@ -37,7 +37,7 @@ jobs:
           directory: .
           framework: terraform
           output: sarif
-          output_file: checkov.sarif
+          output_file: results.sarif
           soft_fail: true
 
       - name: Upload Checkov results
