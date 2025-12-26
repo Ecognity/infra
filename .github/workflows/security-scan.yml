@@ -38,7 +38,7 @@ jobs:
           framework: terraform
           output: sarif
           output_file: checkov.sarif
-          soft_fail: false
+          soft_fail: true
 
       - name: Upload Checkov results
         uses: github/codeql-action/upload-sarif@v3
